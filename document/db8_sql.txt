@@ -1,0 +1,61 @@
+//DB생성
+luna://com.webos.service.db
+
+putKind 
+
+{
+	"id": "com.domain.app:1", 
+	"owner":"com.domain.app",
+	"indexes": [
+		{"name":"byname", "props":[{"name":"name"}]},
+		{"name":"byvarcode", "props":[{"name":"varcode"}]},
+		{"name":"bycategory", "props":[{"name":"category"}]}
+	]
+}
+
+//데이터 삽입
+com.webos.service.configurator
+
+put
+
+"objects":[{"_kind":"com.domain.app:1", "category":"snack", "name":"yangparing", "varcode":"0000", "price":1500, "x":1, "y":1},
+{"_kind":"com.domain.app:1", "category":"snack", "name":"saewooggang", "varcode":"1111", "price":1700, "x":1, "y":2},
+{"_kind":"com.domain.app:1", "category":"snack", "name":"chocopie", "varcode":"2222", "price":1600, "x":2, "y":1},
+{"_kind":"com.domain.app:1", "category":"ramyeon", "name":"shinramyeon", "varcode":"3333", "price":900, "x":5, "y":6},
+{"_kind":"com.domain.app:1", "category":"ramyeon", "name":"anseong", "varcode":"4444", "price":800, "x":5, "y":7},
+{"_kind":"com.domain.app:1", "category":"ramyeon", "name":"jinramyeon", "varcode":"5555", "price":7, "x":5, "y":5},
+{"_kind":"com.domain.app:1", "category":"drink", "name":"coke", "varcode":"6666", "price":1100, "x":2, "y":7},
+{"_kind":"com.domain.app:1", "category":"drink", "name":"cider", "varcode":"7777", "price":1000, "x":2 "y":9},
+{"_kind":"com.domain.app:1", "category":"toy", "name":"pororo", "varcode":"8888", "price":5000, "x":8, "y":7},
+{"_kind":"com.domain.app:1", "category":"toy", "name":"gundam", "varcode":"9999", "price":7500, "x":8, "y":8}
+
+//이름으로 검색
+"luna://com.webos.service.db"
+
+find
+
+"query": {
+                        "from": "com.domain.app:1",
+                        "where": [{
+                                "prop": "name",
+                                "op": "=",
+                                "val": checklist[i]
+                            }
+                        ]
+                    }
+                    
+ //바코드로 검색
+ "luna://com.webos.service.db"
+
+find
+
+"query": {
+                        "from": "com.domain.app:1",
+                        "where": [{
+                                "prop": "varcode",
+                                "op": "=",
+                                "val": RFID값
+                            }
+                        ]
+                    }
+**현재 name, varcode,cateogry에 의한 검색만 있음. prop에 각 항목을 넣고 val에 찾고자하는 값을 넣으면 됨
