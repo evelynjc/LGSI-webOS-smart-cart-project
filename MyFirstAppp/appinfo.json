@@ -1,0 +1,16 @@
+{
+  "id": "com.sample.app",
+  "version": "1.0.0",
+  "vendor": "My Company",
+  "type": "web",
+  "main": "index.html",
+  "title": "new app",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "requiredPermissions": [
+    "database",
+    "time",
+    "settings.read",
+    "activities.manage"
+  ]
+}

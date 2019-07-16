@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<head>
+    <script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        function init() {
+            //putKind. db8 생성
+            var test = document.getElementById("mydiv");
+            var request = webOS.service.request("luna://com.webos.service.db", {
+                method: "delKind",
+                parameters: {
+                    "id": "com.sample.app:1",
+                },
+                onSuccess: function (args) {
+                    test.innerHTML += "<h1 style='color:white'>delKind success" + "</h1>";
+                    //console.log(args);
+
+                },
+                onFailure: function (args) {
+                    test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
+                }
+            });
+            request = webOS.service.request("luna://com.webos.service.db", {
+                method: "putKind",
+                parameters: {
+                    "id": "com.sample.app:1",
+                    "owner": "com.sample.app",
+                    "indexes": [
+                        { "name": "byname", "props": [{ "name": "name" }] },
+                        { "name": "byvarcode", "props": [{ "name": "varcode" }] },
+                        { "name": "bycategory", "props": [{ "name": "category" }] }
+                    ]
+                },
+                onSuccess: function (args) {
+                    test.innerHTML += "<h1 style='color:white'>putKind success" + "</h1>";
+                    //console.log(args);
+
+                },
+                onFailure: function (args) {
+                    test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
+                }
+            });
+
+            //db에 값 insert
+            request = webOS.service.request("luna://com.webos.service.db", {
+                method: "put",
+                parameters: {
+                    "objects": [
+                        { "_kind": "com.sample.app:1", "category": "snack", "name": "yangparing", "varcode": "579951928946", "price": 1500, "x": 25, "y": 10 },
+                        { "_kind": "com.sample.app:1", "category": "snack", "name": "saewooggang", "varcode": "1111", "price": 1700, "x": 30, "y": 15 },
+                        { "_kind": "com.sample.app:1", "category": "snack", "name": "chocopie", "varcode": "973165697886", "price": 1600, "x": 25, "y": 30 },
+                        { "_kind": "com.sample.app:1", "category": "ramyeon", "name": "shinramyeon", "varcode": "3333", "price": 900, "x": 30, "y": 60 },
+                        { "_kind": "com.sample.app:1", "category": "ramyeon", "name": "anseong", "varcode": "584193142270", "price": 800, "x": 25, "y": 60 },
+                        { "_kind": "com.sample.app:1", "category": "ramyeon", "name": "jinramyeon", "varcode": "5555", "price": 700, "x": 30, "y": 80 },
+                        { "_kind": "com.sample.app:1", "category": "drink", "name": "coke", "varcode": "894243055050", "price": 1100, "x": 70, "y": 70 },
+                        { "_kind": "com.sample.app:1", "category": "drink", "name": "cider", "varcode": "7777", "price": 1000, "x": 70, "y": 80 },
+                        { "_kind": "com.sample.app:1", "category": "toy", "name": "pororo", "varcode": "709621236710", "price": 5000, "x": 60, "y": 10 },
+                        { "_kind": "com.sample.app:1", "category": "toy", "name": "gundam", "varcode": "9999", "price": 7500, "x": 80, "y": 50 }
+                    ]
+                },
+                onSuccess: function (args) {
+                    test.innerHTML += "<h1 style='color:white'>put success" + "</h1>";
+                    //console.log(args);
+
+                },
+                onFailure: function (args) {
+                    test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
+                }
+            });
+	/*
+            //물품 이름에 의한 검색
+            request = webOS.service.request("luna://com.webos.service.db", {
+                method: "find",
+                parameters: {
+                    "query": {
+                        "from": "com.domain.app:1",
+                        "where": [{
+                            "prop": "name",
+                            "op": "=",
+                            "val": //이름 적어넣기
+                        }
+                        ]
+                    }
+                },
+                onSuccess: function (args) {
+                    test.innerHTML += "<h1 style='color:white'>search success" + "</h1>";
+                    console.log(args);
+                    total_price += args.results[0].price;
+                    console.log(total_price);
+                },
+                onFailure: function (args) {
+                    test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
+                }
+            });
+            //바코드에 의한 검색
+            request = webOS.service.request("luna://com.webos.service.db", {
+                method: "find",
+                parameters: {
+                    "query": {
+                        "from": "com.domain.app:1",
+                        "where": [{
+                            "prop": "varcode",
+                            "op": "=",
+                            "val": //바코드 적어넣기
+                        }
+                        ]
+                    }
+                },
+                onSuccess: function (args) {
+                    test.innerHTML += "<h1 style='color:white'>search success" + "</h1>";
+                    console.log(args);
+                    total_price += args.results[0].price;
+                    console.log(total_price);
+                },
+                onFailure: function (args) {
+                    test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
+                }
+            });
+
+
+*/
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="mydiv"></div>
+</body>

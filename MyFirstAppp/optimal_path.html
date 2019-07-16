@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        #left {
+            float: left;
+            width: 50%;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        #right {
+            float: right;
+            width: 50%;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+    </style>
+    <script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        var map;
+        var print_map;
+        var mapsize = 85;
+        var visit;
+        var distance;
+        var data_num = 0;
+        //var data = [[2, 4], [4, 5], [0, 10], [10, 10]];
+        var dir = [[-1, 0], [0, 1], [1, 0], [0, -1]]; // U, R, D, L
+        var pos = ["D", "L", "U", "R"]; //어디에서 왔는지. 당연히 위랑 반대가 되어야지
+        var optimal_path = new Array();
+        var optimal_path_cnt = 0;
+        var PQ = new Array();
+        var PQsize = 0;
+        var startx = 0, starty = 0, prevx, prevy;
+        var flag = 0, path_num = 1;
+        var callback_cnt = 0;
+        var checkArray;
+        PQ[0] = new Array();
+        PQ[0] = [0, 0, 0];
+
+        function onLoad() {
+            map = new Array();
+            print_map = new Array();
+            visit = new Array();
+            distance = new Array();
+            for (var i = 0; i < mapsize; i++) {
+                map[i] = new Array();
+                print_map[i] = new Array();
+                visit[i] = new Array();
+                distance[i] = new Array();
+                for (var j = 0; j < mapsize; j++) {
+                    map[i][j] = 0;
+                    print_map[i][j] = 0;
+                    visit[i][j] = "N";
+                    distance[i][j] = 9999;
+                }
+            }
+            //Block 1
+            for (var i = 15; i <= 30; i++) {
+                for (var j = 10; j <= 30; j++) {
+                    map[i][j] = 2;
+                }
+            }
+            //Block 2
+            for (var i = 15; i <= 30; i++) {
+                for (var j = 60; j <= 80; j++) {
+                    map[i][j] = 2;
+                }
+            }
+            //Block 3
+            for (var i = 60; i <= 80; i++) {
+                for (var j = 10; j <= 30; j++) {
+                    map[i][j] = 2;
+                }
+            }
+            //Block 4
+            for (var i = 15; i <= 30; i++) {
+                for (var j = 10; j <= 30; j++) {
+                    map[i][j] = 2;
+                }
+            }
+        }
+
+        function onClick() {
+            checkArray = new Array();
+            var cnt = 0;
+            var checkbox = document.getElementsByName("chk_info");
+
+            for (var i = 0; i < checkbox.length; i++) {
+                if (checkbox[i].checked == true) {
+                    checkArray.push(checkbox[i].value);
+                    checkArray.checked = false;
+                }
+            }
+
+            for (var i = 0; i < checkArray.length; i++) {
+                var lunaReq = webOS.service.request("luna://com.webos.service.db", {
+                    method: "find",
+                    parameters: {
+                        "query": {
+                            "from": "com.domain.app:1",
+                            "where": [{
+                                "prop": "name",
+                                "op": "=",
+                                "val": checkArray[i]
+                            }
+                            ]
+                        }
+                    },
+                    onSuccess: function (args) {
+                        console.log(args.results[0].name);
+                        map[args.results[0].x][args.results[0].y] = 1;
+                        data_num++;
+                        if (data_num == checkArray.length) {
+                            findpath();
+                            pathinit();
+                        }
+                    },
+                    onFailure: function (args) {
+                        var str = "errorCode: " + args.errorCode + "     " + args.errorText;
+                        console.log(str);
+                    }
+                });
+            }
+
+        }
+        function pathinit() {
+            for (var i = 0; i < mapsize; i++) {
+                for (var j = 0; j < mapsize; j++) {
+                    print_map[i][j] = 0;
+                }
+            }
+            data_num = 0;
+            path_num = 1;
+            callback_cnt = 0;
+            startx = 0;
+            starty = 0;
+            optimal_path = new Array();
+            optimal_path_cnt = 0;
+        }
+        //minHeap 삽입 삭제
+        function insert(x, y, d) {
+            var arr = new Array();
+            arr[0] = x;
+            arr[1] = y;
+            arr[2] = d;
+            PQsize += 1;
+            index = PQsize;
+            while ((index != 1) && (arr[2] < PQ[parseInt(index / 2)][2])) {
+                PQ[index] = PQ[parseInt(index / 2)];
+                index /= 2;
+            }
+
+            PQ[index] = arr;
+        }
+
+        function pop() {
+            var item = PQ[1];
+            var temp = PQ[PQsize];
+            PQsize -= 1;
+            var parent = 1, child = 2;
+
+            while (child <= PQsize) {
+                if ((child < PQsize) && PQ[child][2] >= PQ[child + 1][2])
+                    child += 1;
+                if (temp[2] < PQ[child][2])
+                    break;
+
+                PQ[parent] = PQ[child];
+                parent = child;
+                child *= 2;
+            }
+
+            PQ[parent] = temp;
+            return item;
+        }
+
+        //물건 하나 찾을대마다 distance랑 visit를 초기화 해줘야함. 왜? 갔던길을 다시 가야하니까
+        function init() {
+            for (var i = 0; i < mapsize; i++) {
+                for (var j = 0; j < mapsize; j++) {
+                    visit[i][j] = "N";
+                    distance[i][j] = 9999;
+                }
+            }
+        }
+
+        //가는 길을 맵에 그리도록함. 순서대로 1,2,3,4 표시
+        function path(posx, posy) {
+            var tx = posx;
+            var ty = posy;
+            var stack = new Array();
+            var stackTop = -1;
+            var tempstack;
+            print_map[tx][ty] = path_num;
+            while ((tx != startx) || (ty != starty)) {
+                tempstack = new Array();
+                tempstack[0] = tx;
+                tempstack[1] = ty;
+                stack[++stackTop] = tempstack;
+
+                if (visit[tx][ty] == 'D')
+                    tx += 1;
+                else if (visit[tx][ty] == 'U')
+                    tx -= 1;
+                else if (visit[tx][ty] == 'L')
+                    ty -= 1;
+                else if (visit[tx][ty] == 'R')
+                    ty += 1;
+
+                if (print_map[tx][ty] == 0) 
+                    print_map[tx][ty] = path_num;
+            }
+            while (stackTop != -1) 
+                optimal_path[optimal_path_cnt++] = stack[stackTop--];
+
+            path_num += 1;
+        }
+
+        //data_num : 찾아야 하는 물건 갯수.
+        function findpath() {
+            for (var i = 0; i < data_num; i++) {
+                init();
+                insert(startx, starty, 0);
+                distance[startx][starty] = 0;
+                while (PQsize != 0) {
+                    //alert(PQ);
+                    var temp = pop();
+                    prevx = temp[0];
+                    prevy = temp[1];
+                    tempdis = temp[2];
+                    for (var j = 0; j < 4; j++) {
+                        tempx = prevx + dir[j][0];
+                        tempy = prevy + dir[j][1];
+                        if (tempx < 0 || tempy < 0 || tempx >= mapsize || tempy >= mapsize || map[tempx][tempy] == 2) // 못가는길
+                        continue;
+                        if (map[tempx][tempy] == 1) { // 최초로 목적지 도착시.
+                            visit[tempx][tempy] = pos[j];
+                            distance[tempx][tempy] = tempdis + 1;
+                            flag = 1;
+                            break;//큐대신 힙을 썻기 때문에 바로 물건을 찾으면 break로 탈출가능하다.
+                        }
+                        if (map[tempx][tempy] == 0 && tempdis + 1 < distance[tempx][tempy]) { // 갈 수 있는길인 경우 거기로 간다.
+                            insert(tempx, tempy, tempdis + 1);
+                            distance[tempx][tempy] = tempdis + 1;
+                            visit[tempx][tempy] = pos[j];
+                        }
+                    }
+                    if (flag == 1) {
+                        //물건을 찾고 break로 탈추하면 바로 여기로 와서 뒷처리해줌.
+                        flag = 0;
+                        path(tempx, tempy);
+                        startx = tempx;
+                        starty = tempy;
+                        prevx = tempx;
+                        prevy = tempy;
+                        map[prevx][prevy] = 2;
+                        while (PQsize != 0) {
+                            pop();
+                        }
+
+                        break;
+                    }
+                }
+
+            }
+            console.log(optimal_path);
+        }
+    </script>
+</head>
+<body onload="onLoad()">
+    <div id="right">
+        <h1 style="color:white;">
+            <input type="checkbox" name="chk_info" value="yangparing">yangparing<br>
+            <input type="checkbox" name="chk_info" value="saewooggang">saewooggang<br>
+            <input type="checkbox" name="chk_info" value="chocopie">chocopie<br>
+            <input type="checkbox" name="chk_info" value="shinramyeon">shinramyeon<br>
+            <input type="checkbox" name="chk_info" value="anseong">anseong<br>
+            <input type="checkbox" name="chk_info" value="jinramyeon">jinramyeon<br>
+            <input type="checkbox" name="chk_info" value="coke">coke<br>
+            <input type="checkbox" name="chk_info" value="cider">cider<br>
+            <input type="checkbox" name="chk_info" value="pororo">pororo<br>
+            <input type="checkbox" name="chk_info" value="gundam">gundam<br>
+            <input type="button" value="select" onclick="onClick()" style="width:100px; height:100px; font-size:20px">
+        </h1>
+    </div>
+    <div id="mydiv">
+    </div>
+</body>
+</html>
