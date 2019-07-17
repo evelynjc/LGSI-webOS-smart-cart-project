@@ -42,10 +42,10 @@
             transform: rotate(45deg);
         }
 
-            #direction_marker img {
-                width: inherit;
-                height: inherit;
-            }
+        #direction_marker img {
+            width: inherit;
+            height: inherit;
+        }
 
         #select-wrapper {
             margin-top: 1vh;
@@ -92,19 +92,78 @@
     <!-- and Google Charts -->
     <script type="text/javascript" src="google-charts-loader.js"></script>
     <script>
-        //sample code for calling LS2 API
-        /*var lunaReq = webOS.service.request("luna://com.webos.service.systemservice",
-        {
-        method: "clock/getTime",
-        parameters: {},
-        onSuccess: function (args) {
-        webOS.info("GETTIME_SUCCESS", { "APP_NAME": "example web app" }, "UTC : " + args.utc);
-        },
-        onFailure: function (args) {
-        webOS.error("GETTIME_FAILED", { "APP_NAME": "example web app" }, "errorText : " + args.errorText);
-        }
-        });
-        */
+
+        // productList = [
+        //     {
+        //         snack: []
+        //     },
+        //     {
+        //         ramyeon: []
+        //     },
+        //     {
+        //         drink: []
+        //     },
+        //     {
+        //         toy: []
+        //     }
+        // ];
+        productList = [
+            {
+                snack: ["yangparing", "saewooggang", "chocopie"]
+            },
+            {
+                ramyeon: ["shinramyeon", "anseong", "jinramyeon"]
+            },
+            {
+                drink: ["coke", "cider"]
+            },
+            {
+                toy: ["pororo", "gundam"]
+            }
+        ];
+        cartItemsPos = [];
+        // get all of the DB data
+        // var dbReq = webos.service.request("luna://com.webos.service.db", {
+        //     method: "find",
+        //     parameters: {
+        //         "query": {
+        //             "from": "com.sample.app:1",
+        //             "where": [{
+        //                 "prop": "_kind",
+        //                 "op": "=",
+        //                 "val": "com.sample.app:1"
+        //             }]
+        //         }
+        //     },
+        //     onSuccess: function (args) {
+        //         for (var i = 0; i < args.results.length; i++) {
+        //             var cat = args.results[i].category;
+        //             var name = args.results[i].name;
+        //             if (cat == "snack") {
+        //                 productList["snack"].push(name);
+        //             }
+        //             else if (cat == "ramyeon") {
+        //                 productList["ramyeon"].push(name);
+        //             }
+        //             else if (cat == "drink") {
+        //                 productList["drink"].push(name);
+        //             }
+        //             else if (cat == "toy") {
+        //                 productList["toy"].push(name);
+        //             }
+        //             else {
+        //                 console.log("Error! Product category not identified: " + args.results[i]);
+        //             }
+        //         }
+
+        //     },
+        //     onFailure: function (args) {
+        //         console.log("Initial DB data retreival failed!: " + args.errorText);
+        //     }
+        // });
+
+
+
         var map;
         var print_map;
         var mapsize = 85;
@@ -181,35 +240,35 @@
                 // }
             }
 
-            for (var i = 0; i < checkArray.length; i++) {
-                var lunaReq = webOS.service.request("luna://com.webos.service.db", {
-                    method: "find",
-                    parameters: {
-                        "query": {
-                            "from": "com.sample.app:1",
-                            "where": [{
-                                "prop": "name",
-                                "op": "=",
-                                "val": checkArray[i]
-                            }
-                            ]
-                        }
-                    },
-                    onSuccess: function (args) {
-                        console.log(args.results[0].name);
-                        map[args.results[0].x][args.results[0].y] = 1;
-                        data_num++;
-                        if (data_num == checkArray.length) {
-                            findpath();
-                            pathinit();
-                        }
-                    },
-                    onFailure: function (args) {
-                        var str = "errorCode: " + args.errorCode + "     " + args.errorText;
-                        console.log(str);
-                    }
-                });
-            }
+            // for (var i = 0; i < checkArray.length; i++) {
+            //     var lunaReq = webOS.service.request("luna://com.webos.service.db", {
+            //         method: "find",
+            //         parameters: {
+            //             "query": {
+            //                 "from": "com.sample.app:1",
+            //                 "where": [{
+            //                     "prop": "name",
+            //                     "op": "=",
+            //                     "val": checkArray[i]
+            //                 }
+            //                 ]
+            //             }
+            //         },
+            //         onSuccess: function (args) {
+            //             console.log(args.results[0].name);
+            //             map[args.results[0].x][args.results[0].y] = 1;
+            //             data_num++;
+            //             if (data_num == checkArray.length) {
+            //                 findpath();
+            //                 pathinit();
+            //             }
+            //         },
+            //         onFailure: function (args) {
+            //             var str = "errorCode: " + args.errorCode + "     " + args.errorText;
+            //             console.log(str);
+            //         }
+            //     });
+            // }
 
         }
 
@@ -354,10 +413,6 @@
 
             }
             console.log(optimal_path);
-            // optimalPath = [
-            // { x: 50, y: 50 },
-            // { x: 85, y: 85 },
-            // ];
             for (var i = 0; i < optimal_path.length; i++) {
                 optimalPath.push({
                     x: parseInt(optimal_path[i][0]),
@@ -368,7 +423,7 @@
             }
 
         }
-        
+
     </script>
 </head>
 
@@ -392,45 +447,16 @@
                         <option value="toy">Toys</option>
                     </select>
                 </div>
-                <div class="row"><label class="header" id="header1">Snacks</label></div>
+                <div class="row"><label class="header" id="header1">All Products</label></div>
                 <div class="row item-list-wrapper">
-                    <ul class="list-group item-list">
-                        <li class="list-group-item" draggable="true" ondragstart="drag(event)" id="cider">
-                            Onion Rings
-                            <span class="add-to-cart float-right btn btn-m btn-dark">Add to Cart</span>
-                        </li>
-                        <li class="list-group-item" draggable="true" ondragstart="drag(event)" id="gundam">
-                            Prawn Chips
-                            <span class="add-to-cart float-right btn btn-m btn-dark">Add to Cart</span>
-                        </li>
-                        <li class="list-group-item" draggable="true" ondragstart="drag(event)" id="anseong">
-                            Choco Pie
-                            <span class="add-to-cart float-right btn btn-m btn-dark">Add to Cart</span>
-                        </li>
-
+                    <ul class="list-group item-list" id="item_list">
                     </ul>
 
                 </div>
                 <!--close item-list-wrapper row-->
                 <div class="row"><label class="header" id="header2">Shopping Cart</label></div>
                 <div class="row shopping-cart-wrapper">
-                    <ul class="list-group shopping-cart" ondrop="drop(event)" ondragover="allowDrop(event)">
-                        <!-- <li class="list-group-item" id="saewooggang">Cras justo odio
-                            <span class="delete float-right btn btn-m btn-danger">Delete</span>
-                        </li>
-                        <li class="list-group-item" id="yangparing">Dapibus ac facilisis in
-                            <span class="delete float-right btn btn-m btn-danger">Delete</span>
-                        </li>
-                        <li class="list-group-item" id="chocopie">Morbi leo risus
-                            <span class="delete float-right btn btn-m btn-danger">Delete</span>
-                        </li>
-                        <li class="list-group-item" id="pororo">Porta ac consectetur ac
-                            <span class="delete float-right btn btn-m btn-danger">Delete</span>
-                        </li>
-                        <li class="list-group-item" id="cocke">Vestibulum at eros
-                            <span class="delete float-right btn btn-m btn-danger">Delete</span>
-                        </li> -->
-
+                    <ul class="list-group shopping-cart" id="shopping_cart_list">
                     </ul>
                 </div>
                 <!--close shopping-cart-wrapper row-->
@@ -446,78 +472,34 @@
         <!--close main row-->
     </div>
     <!--close container-->
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!--JS scripts for the application -->
-    <!-- script for Algorithm -->
 
     <script>
-        i = 0; //index variable
-        DBdata = {
-            "objects": [{ "_kind": "com.domain.app:1", "category": "snack", "name": "yangparing", "varcode": "0000", "price": 1500, "x": 1, "y": 1 },
-            { "_kind": "com.domain.app:1", "category": "snack", "name": "saewooggang", "varcode": "1111", "price": 1700, "x": 1, "y": 2 },
-            { "_kind": "com.domain.app:1", "category": "snack", "name": "chocopie", "varcode": "2222", "price": 1600, "x": 2, "y": 1 },
-            { "_kind": "com.domain.app:1", "category": "ramyeon", "name": "shinramyeon", "varcode": "3333", "price": 900, "x": 5, "y": 6 },
-            { "_kind": "com.domain.app:1", "category": "ramyeon", "name": "anseong", "varcode": "4444", "price": 800, "x": 5, "y": 7 },
-            { "_kind": "com.domain.app:1", "category": "ramyeon", "name": "jinramyeon", "varcode": "5555", "price": 7, "x": 5, "y": 5 },
-            { "_kind": "com.domain.app:1", "category": "drink", "name": "coke", "varcode": "6666", "price": 1100, "x": 2, "y": 7 },
-            { "_kind": "com.domain.app:1", "category": "drink", "name": "cider", "varcode": "7777", "price": 1000, "x": 2, "y": 9 },
-            { "_kind": "com.domain.app:1", "category": "toy", "name": "pororo", "varcode": "8888", "price": 5000, "x": 8, "y": 7 },
-            { "_kind": "com.domain.app:1", "category": "toy", "name": "gundam", "varcode": "9999", "price": 7500, "x": 8, "y": 8 }
-            ]
-        };
-        // console.log(DBdata.objects[0]);
-
-        shoppingCartList = [
-            DBdata.objects[0].name,
-            DBdata.objects[2].name,
-            DBdata.objects[5].name,
-        ];
+        shoppingCartList = [];
         currentPos = { x: "0", y: "0", d: "0" }; // x: 0~85, y: 0~90
-        Categories = [
-            {
-                snack: ["yangparing", "saewooggang", "chocopie"]
-            },
-            {
-                ramyeon: ["shinramyeon", "anseong", "jinramyeon"]
-            },
-            {
-                drink: ["coke", "cider"]
-            },
-            {
-                toy: ["pororo", "gundam"]
-            },
-        ];
-        optimalPath = [
-            // { x: 50, y: 50 },
-            // { x: 85, y: 85 },
-        ];
+        optimalPath = []; // { x: 50, y: 50 } format
 
         // Google charts
-        // google.charts.load('current', { 'packages': ['corechart'] });
-        // google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             var optimalPathGraph = google.visualization.arrayToDataTable([
-                ['', ''],
+                ['X', 'Y'],
                 [0, 0],
-                // [10, 10,],
-                // [20, 30,],
-                // [42, 42,]
-            ])
+                [45, 50],
+                [35,56]
+            ]);
+            var selectedItemsStyle = "point { size: 18; shape-type: star; fill-color: #a52714; }'";
 
             var len = optimalPath.length;
             var xVal, yVal;
-            for (i = 0; i < len; i++) {
-                xVal = optimalPath[i].x;
-                yVal = optimalPath[i].y;
-                console.log(xVal + ", " + yVal);
-                optimalPathGraph.addRows([
-                    [xVal, yVal]
-                ]);
-            }
-            optimalPathGraph.addRows([
+            // for (var i = 0; i < len; i++) {
+            //     xVal = optimalPath[i].x;
+            //     yVal = optimalPath[i].y;
+            //     console.log(xVal + ", " + yVal);
+            //     optimalPathGraph.addRows([
+            //         [xVal, yVal, selectedItemsStyle]
+            //     ]);
+            // }
 
-            ]);
+            
             // data.addColumn, data.addRows
             var options = {
                 chartArea: { left: 0, bottom: 0, width: '100%', height: '100%' },
@@ -594,82 +576,112 @@
         //         }
         //     });
         // }
-
-        
-        $(".add-to-cart").click(function () {
-            var name = $(this).parent().attr("id");
-            var checkIfExist = jQuery.inArray(name, shoppingCartList);
-            // console.log(checkIfExist + ", " + name);
-            if (checkIfExist == -1) { //item is not in the array
-                shoppingCartList.push(name);
-                $(".shopping-cart").append('<li class="list-group-item" id="' + name + '">' + name + '<span class="float-right btn btn-m btn-danger">Delete</span></li>');
-                // $("#"+name).children().addClass("delete");
-                // console.log($("#"+name).html());
-                console.log("shoppingCartList: {" + shoppingCartList + "}");
-            }
-        });
-
-        $(".delete").click(function () {
-            var name = $(this).parent().attr("id");
+        function deleteItem(name) {
+            console.log("name: " + name);
             var toBeDeleted = jQuery.inArray(name, shoppingCartList);
 
-            if (toBeDeleted >= 0) {
-                // console.log("index, name of the item to be deleted: " + toBeDeleted  +", " + name);
+            if (toBeDeleted >= 0) { // item is in shopping cart array
                 shoppingCartList.splice(toBeDeleted, 1);
-                $(this).parent().remove();
-                console.log("name, shoppingCartList: {" + name + ", " + shoppingCartList + "}");
+                $("#" + name).remove();
+                // console.log("shoppingCartList: {" + shoppingCartList + "}");
             }
-        });
-
-
-
-        // add an item into the shopping cart by drag and drop
-        function allowDrop(ev) {
-            ev.preventDefault();
         }
 
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
-        }
 
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            ev.target.appendChild(document.getElementById(data));
-        }
 
         $(document).ready(function () {
 
+            for (var i = 0; i < productList[0]["snack"].length; i++) {
+                var str = '\
+                    <li class="list-group-item snack" >' + productList[0]["snack"][i] + '\
+                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[0]["snack"][i] + '">Add to Cart</span>\
+                    </li>';
+                $("#item_list").append(str);
+            }
+            for (var i = 0; i < productList[1]["ramyeon"].length; i++) {
+                var str = '\
+                    <li class="list-group-item ramyeon" >' + productList[1]["ramyeon"][i] + '\
+                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[1]["ramyeon"][i] + '">Add to Cart</span>\
+                    </li>';
+                $("#item_list").append(str);
+            }
+            for (var i = 0; i < productList[2]["drink"].length; i++) {
+                var str = '\
+                    <li class="list-group-item drink" >' + productList[2]["drink"][i] + '\
+                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[2]["drink"][i] + '">Add to Cart</span>\
+                    </li>';
+                $("#item_list").append(str);
+            }
+            for (var i = 0; i < productList[3]["toy"].length; i++) {
+                var str = '\
+                    <li class="list-group-item toy" >' + productList[3]["toy"][i] + '\
+                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[3]["toy"][i] + '">Add to Cart</span>\
+                    </li>';
+                $("#item_list").append(str);
+            }
 
-
-            $("select").change(function () {
+            $("select").change(function (e) {
                 var categoryVal = $("select option:selected").html();
-
                 if (categoryVal != "Categories") {
                     $("#header1").html(categoryVal);
+                    $(".snack").hide();
+                    $(".ramyeon").hide();
+                    $(".drink").hide();
+                    $(".toy").hide();
+
+                    if (categoryVal == "Snacks") {
+                        categoryVal = "snack";
+                    }
+                    else if (categoryVal == "Instant Noodles") {
+                        categoryVal = "ramyeon";
+                    }
+                    else if (categoryVal == "Drinks") {
+                        categoryVal = "drink";
+                    }
+                    else {
+                        categoryVal = "toy";
+                    }
+                    $("." + categoryVal).show();
                 }
-                $(".item-list").append('\
-                                <li class="list-group-item" draggable="true" ondragstart="drag(event)">Onion Rings\
-                                    <span class="add-to-cart float-right btn btn-m btn-dark">Add to Cart</span>\
-                                </li>'
-                );
+                else {
+                    $(".snack").show();
+                    $(".ramyeon").show();
+                    $(".drink").show();
+                    $(".toy").show();
+                }
+
             });
-            // $("").attr("draggable", "true");
-            // $("").attr("ondragstart", "drag(event)");
 
             // 'directions' button
             $("#main_btn").click(function () {
-                // $(this).hide();
                 onClick();
                 // draw optimal path
                 (function () {
                     google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
+
                 })();
 
                 $(this).removeClass("btn-success").addClass("btn-dark");
                 $(this).html("Proceed to Checkout");
             });
+
+            $(".add-to-cart").click(function () {
+                var name = $(this).attr("id");
+                console.log(name);
+                var checkIfExist = jQuery.inArray(name, shoppingCartList);
+                if (checkIfExist == -1) { //item is not in the array
+                    shoppingCartList.push(name);
+                    console.log("shoppingCartList: {" + shoppingCartList + "}");
+                    $(this).removeAttr("id");
+                    var str = '<li class="list-group-item" id="' + name + '">' + name + '<span onclick="deleteItem(\'' + name + '\');" class="delete float-right btn btn-m btn-danger">Delete</span></li>';
+                    console.log(str);
+                    $("#shopping_cart_list").append(str);
+
+                }
+            });
+
+
         });
 
     </script>
