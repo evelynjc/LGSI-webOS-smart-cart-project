@@ -26,7 +26,7 @@
         var data_num = 0;
         //var data = [[2, 4], [4, 5], [0, 10], [10, 10]];
         var dir = [[-1, 0], [0, 1], [1, 0], [0, -1]]; // U, R, D, L
-        var pos = ["D", "L", "U", "R"]; //¾îµğ¿¡¼­ ¿Ô´ÂÁö. ´ç¿¬È÷ À§¶û ¹İ´ë°¡ µÇ¾î¾ßÁö
+        var pos = ["D", "L", "U", "R"]; //ì–´ë””ì—ì„œ ì™”ëŠ”ì§€. ë‹¹ì—°íˆ ìœ„ë‘ ë°˜ëŒ€ê°€ ë˜ì–´ì•¼ì§€
         var optimal_path = new Array();
         var optimal_path_cnt = 0;
         var PQ = new Array();
@@ -37,7 +37,6 @@
         var checkArray;
         PQ[0] = new Array();
         PQ[0] = [0, 0, 0];
-
         function onLoad() {
             map = new Array();
             print_map = new Array();
@@ -138,7 +137,7 @@
             optimal_path = new Array();
             optimal_path_cnt = 0;
         }
-        //minHeap »ğÀÔ »èÁ¦
+        //minHeap ì‚½ì… ì‚­ì œ
         function insert(x, y, d) {
             var arr = new Array();
             arr[0] = x;
@@ -175,7 +174,7 @@
             return item;
         }
 
-        //¹°°Ç ÇÏ³ª Ã£À»´ë¸¶´Ù distance¶û visit¸¦ ÃÊ±âÈ­ ÇØÁà¾ßÇÔ. ¿Ö? °¬´ø±æÀ» ´Ù½Ã °¡¾ßÇÏ´Ï±î
+        //ë¬¼ê±´ í•˜ë‚˜ ì°¾ì„ëŒ€ë§ˆë‹¤ distanceë‘ visitë¥¼ ì´ˆê¸°í™” í•´ì¤˜ì•¼í•¨. ì™œ? ê°”ë˜ê¸¸ì„ ë‹¤ì‹œ ê°€ì•¼í•˜ë‹ˆê¹Œ
         function init() {
             for (var i = 0; i < mapsize; i++) {
                 for (var j = 0; j < mapsize; j++) {
@@ -185,7 +184,7 @@
             }
         }
 
-        //°¡´Â ±æÀ» ¸Ê¿¡ ±×¸®µµ·ÏÇÔ. ¼ø¼­´ë·Î 1,2,3,4 Ç¥½Ã
+        //ê°€ëŠ” ê¸¸ì„ ë§µì— ê·¸ë¦¬ë„ë¡í•¨. ìˆœì„œëŒ€ë¡œ 1,2,3,4 í‘œì‹œ
         function path(posx, posy) {
             var tx = posx;
             var ty = posy;
@@ -217,7 +216,7 @@
             path_num += 1;
         }
 
-        //data_num : Ã£¾Æ¾ß ÇÏ´Â ¹°°Ç °¹¼ö.
+        //data_num : ì°¾ì•„ì•¼ í•˜ëŠ” ë¬¼ê±´ ê°¯ìˆ˜.
         function findpath() {
             for (var i = 0; i < data_num; i++) {
                 init();
@@ -232,22 +231,22 @@
                     for (var j = 0; j < 4; j++) {
                         tempx = prevx + dir[j][0];
                         tempy = prevy + dir[j][1];
-                        if (tempx < 0 || tempy < 0 || tempx >= mapsize || tempy >= mapsize || map[tempx][tempy] == 2) // ¸ø°¡´Â±æ
+                        if (tempx < 0 || tempy < 0 || tempx >= mapsize || tempy >= mapsize || map[tempx][tempy] == 2) // ëª»ê°€ëŠ”ê¸¸
                         continue;
-                        if (map[tempx][tempy] == 1) { // ÃÖÃÊ·Î ¸ñÀûÁö µµÂø½Ã.
+                        if (map[tempx][tempy] == 1) { // ìµœì´ˆë¡œ ëª©ì ì§€ ë„ì°©ì‹œ.
                             visit[tempx][tempy] = pos[j];
                             distance[tempx][tempy] = tempdis + 1;
                             flag = 1;
-                            break;//Å¥´ë½Å ÈüÀ» ›§±â ¶§¹®¿¡ ¹Ù·Î ¹°°ÇÀ» Ã£À¸¸é break·Î Å»Ãâ°¡´ÉÇÏ´Ù.
+                            break;//íëŒ€ì‹  í™ì„ Â›ãŸ ë•Œë¬¸ì— ë°”ë¡œ ë¬¼ê±´ì„ ì°¾ìœ¼ë©´ breakë¡œ íƒˆì¶œê°€ëŠ¥í•˜ë‹¤.
                         }
-                        if (map[tempx][tempy] == 0 && tempdis + 1 < distance[tempx][tempy]) { // °¥ ¼ö ÀÖ´Â±æÀÎ °æ¿ì °Å±â·Î °£´Ù.
+                        if (map[tempx][tempy] == 0 && tempdis + 1 < distance[tempx][tempy]) { // ê°ˆ ìˆ˜ ìˆëŠ”ê¸¸ì¸ ê²½ìš° ê±°ê¸°ë¡œ ê°„ë‹¤.
                             insert(tempx, tempy, tempdis + 1);
                             distance[tempx][tempy] = tempdis + 1;
                             visit[tempx][tempy] = pos[j];
                         }
                     }
                     if (flag == 1) {
-                        //¹°°ÇÀ» Ã£°í break·Î Å»ÃßÇÏ¸é ¹Ù·Î ¿©±â·Î ¿Í¼­ µŞÃ³¸®ÇØÁÜ.
+                        //ë¬¼ê±´ì„ ì°¾ê³  breakë¡œ íƒˆì¶”í•˜ë©´ ë°”ë¡œ ì—¬ê¸°ë¡œ ì™€ì„œ ë’·ì²˜ë¦¬í•´ì¤Œ.
                         flag = 0;
                         path(tempx, tempy);
                         startx = tempx;
