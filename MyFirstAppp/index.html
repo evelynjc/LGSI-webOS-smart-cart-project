@@ -5,10 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="bootstrap-4.3.1-dist/css/bootstrap.min.css">
-    <style type="text/css">
-        /* CSS styles for the whole app. Might be moved into a single CSS file later on */
-        /* Now that I think that I can just download all the stylesheet and JS links and include in this page */
-        html,
+    <style type="text/css">html,
         body {
             width: 100%;
             height: 100%;
@@ -85,11 +82,12 @@
             font-size: x-large;
         }
     </style>
+    <!-- required js libraries -->
     <script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
     <script src="jquery-3.3.1.js"></script>
     <script src="popper.min.js"></script>
     <script src="bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <!-- and Google Charts -->
+    <!-- Google Charts -->
     <script type="text/javascript" src="google-charts-loader.js"></script>
     <script>
         productList = [
@@ -106,21 +104,6 @@
                 toy: []
             }
         ];
-        // productList = [
-        //     {
-        //         snack: ["yangparing", "saewooggang", "chocopie"]
-        //     },
-        //     {
-        //         ramyeon: ["shinramyeon", "anseong", "jinramyeon"]
-        //     },
-        //     {
-        //         drink: ["coke", "cider"]
-        //     },
-        //     {
-        //         toy: ["pororo", "gundam"]
-        //     }
-        // ];
-        cartItemsPos = [];
         // get all of the DB data
         var dbReq = webOS.service.request("luna://com.webos.service.db", {
             method: "find",
@@ -130,10 +113,11 @@
                 }
             },
             onSuccess: function (args) {
-                console.log("Retreival Success");
+                // initialising products list
                 for (var i = 0; i < args.results.length; i++) {
                     var cat = args.results[i].category;
                     var name = args.results[i].name;
+                    // append lists to <ul> by category
                     if (cat == "snack") {
                         productList[0]["snack"].push(name);
                         var str = '\
@@ -170,45 +154,12 @@
                         console.log("Error! Product category not identified: " + args.results[i]);
                     }
                 }
-                // console.log()
-                console.log(1)
             },
             onFailure: function (args) {
                 console.log("Initial DB data retreival failed!: " + args.errorText);
             }
         });
-        // for (var i = 0; i < productList[0]["snack"].length; i++) {
-        //     console.log("1");
-        //     var str = '\
-        //         <li class="list-group-item snack" >' + productList[0]["snack"][i] + '\
-        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[0]["snack"][i] + '">Add to Cart</span>\
-        //         </li>';
-        //     $("#item_list").append(str);
-        //     console.log("2");
-        // }
-        // for (var i = 0; i < productList[1]["ramyeon"].length; i++) {
-        //     var str = '\
-        //         <li class="list-group-item ramyeon" >' + productList[1]["ramyeon"][i] + '\
-        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[1]["ramyeon"][i] + '">Add to Cart</span>\
-        //         </li>';
-        //     $("#item_list").append(str);
-        // }
-        // for (var i = 0; i < productList[2]["drink"].length; i++) {
-        //     var str = '\
-        //         <li class="list-group-item drink" >' + productList[2]["drink"][i] + '\
-        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[2]["drink"][i] + '">Add to Cart</span>\
-        //         </li>';
-        //     $("#item_list").append(str);
-        // }
-        // for (var i = 0; i < productList[3]["toy"].length; i++) {
-        //     var str = '\
-        //         <li class="list-group-item toy" >' + productList[3]["toy"][i] + '\
-        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[3]["toy"][i] + '">Add to Cart</span>\
-        //         </li>';
-        //     $("#item_list").append(str);
-        // }
-        //alert();
-        console.log(3);
+
         var map;
         var print_map;
         var mapsize = 85;
@@ -444,14 +395,13 @@
                     }
                 }
             }
-            console.log(optimal_path);
+            
+            // copy optimal path x,y coordinates values to a static array
             for (var i = 0; i < optimal_path.length; i++) {
                 optimalPath.push({
                     x: parseInt(optimal_path[i][0]),
                     y: parseInt(optimal_path[i][1]),
                 });
-                // console.log(optimalPath[i].x);
-                // console.log(optimalPath[i].y);
             }
         }
     </script>
@@ -466,7 +416,6 @@
                 <div id="direction_marker"><img src="arrow(bluesky).png"></div>
 
             </div>
-            <!-- <p id="id1">testttt</p> -->
             <div class="col">
                 <!-- label changes when choosing another category -->
                 <div class="input-group" id="select_wrapper">
@@ -478,23 +427,22 @@
                         <option value="toy">Toys</option>
                     </select>
                 </div>
+                <!-- products list -->
                 <div class="row"><label class="header" id="header1">All Products</label></div>
                 <div class="row item-list-wrapper">
                     <ul class="list-group item-list" id="item_list">
                     </ul>
-
                 </div>
-                <!--close item-list-wrapper row-->
+                <!-- shopping cart list -->
                 <div class="row"><label class="header" id="header2">Shopping Cart</label></div>
                 <div class="row shopping-cart-wrapper">
                     <ul class="list-group shopping-cart" id="shopping_cart_list">
                     </ul>
                 </div>
-                <!--close shopping-cart-wrapper row-->
-
+                <!-- Directions button -->
                 <div class="row" id="main_btn_wrapper">
                     <button id="main_btn" type="button" class="btn btn-success">Directions</button>
-                </div> <!-- close main button row -->
+                </div>
                 <!-- modal test -->
                 <button type="button" id="darktemplar" style="width: 1px; height: 1px;" class="btn btn-info btn-lg"
                     data-toggle="modal" data-target="#myModal" style="display: none;">Dark</button>
@@ -526,11 +474,11 @@
     <!--close container-->
 
     <script>
-        var flag_ajax = 0;
-        shoppingCartList = [];
-        // currentPos = { x: "0", y: "0", d: "0" }; // x: 0~85, y: 0~90
-        currentPos = { x: "0", y: "0", d: "0", id: "0" }; // x: 0~85, y: 0~90
-        //console.log(currentPos);
+        var flag_ajax = 0; //flag var for ajax communications
+        shoppingCartList = []; // list for items in the shopping cart
+        currentPos = { x: "0", y: "0", d: "0", id: "0" }; // current position. x: 0~85, y: 0~90
+
+        // barcode(RFID) recognition
         function detect_varcode(currentPos) {
             if (currentPos.id != 0) {
                 var lunaReq = webOS.service.request("luna://com.webos.service.db", {
@@ -562,28 +510,25 @@
             }
         }
 
-        optimalPath = []; // { x: 50, y: 50 } format
+        optimalPath = [];
         // Google charts
         function drawChart() {
             var optimalPathGraph = google.visualization.arrayToDataTable([
                 ['X', 'Y'],
                 [0, 0],
-                // [45, 50],
-                // [35,56]
             ]);
-
             var len = optimalPath.length;
             var xVal, yVal;
+
             for (var i = 0; i < len; i++) {
                 xVal = optimalPath[i].x;
                 yVal = optimalPath[i].y;
-                console.log(xVal + ", " + yVal);
                 optimalPathGraph.addRows([
                     [xVal, yVal]
                 ]);
             }
-            // data.addColumn, data.addRows
-            var options = {
+            
+            var options = { // options for the graph(optimal path)
                 chartArea: { left: 0, bottom: 0, width: '100%', height: '100%' },
                 title: '',
                 curveType: 'function',
@@ -621,26 +566,22 @@
             var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
             chart.draw(optimalPathGraph, options);
         }
-        // Ajax -----------------------------
+        // start Ajax -----------------------------
 
         console.log('start for try_ajax');
         window.setInterval("refreshDiv()", 1000);
         function refreshDiv() {
-            if(flag_ajax == 1){
+            if(flag_ajax == 1){ // Ajax starts after pressing 'Directions' button
                 $.ajax({
                     url: "http://192.168.43.182:80",
                     type: "GET",
-                    //contentType:"application/x-www-form-urlencoded; char-set: euc-kr",
                     cache: false,
                     crossDomain: true,
                     dataType: "json",
-                    //jsonpCallback : "callbackData",
                     data: "",
                     success: function (data) {
-                        $("#id1").html("success");
                         var data_parse = JSON.stringify(data);
-                        // $("#id1").html(data_parse);
-                        console.log("success func");
+                        // get the x,y,theta, and barcode values from the server
                         currentPos.x = Math.round(data[0].x);
                         currentPos.y = Math.round(data[1].y);
                         currentPos.d = Math.round(data[2].theta);
@@ -648,6 +589,7 @@
                         console.log("x,y,th,barcode: " + currentPos.x + ", " + currentPos.y + ", " + currentPos.d + ", " + currentPos.id);
                         detect_varcode(currentPos);
 
+                        // styling position marker and reformatting to fit the screen
                         $("#direction_marker").css({
                             left: currentPos.x + 'vh',
                             bottom: currentPos.y + 'vh',
@@ -673,16 +615,22 @@
                 console.log("shoppingCartList: {" + shoppingCartList + "}");
             }
         }
+
+        // jquery scripts for general/eventful functionalities
         $(document).ready(function () {
-            console.log("3")
+            // selected onchange:
             $("select").change(function (e) {
-                var categoryVal = $("select option:selected").html();
+                var categoryVal = $("select option:selected").html(); // selected val
                 if (categoryVal != "Categories") {
                     $("#header1").html(categoryVal);
+
+                    // hide all products
                     $(".snack").hide();
                     $(".ramyeon").hide();
                     $(".drink").hide();
                     $(".toy").hide();
+                    
+                    // only show items in the selected category
                     if (categoryVal == "Snacks") {
                         categoryVal = "snack";
                     }
@@ -698,12 +646,14 @@
                     $("." + categoryVal).show();
                 }
                 else {
+                    // showing all products
                     $(".snack").show();
                     $(".ramyeon").show();
                     $(".drink").show();
                     $(".toy").show();
                 }
             });
+            
             // 'directions' button
             $("#main_btn").click(function () {
                 onClick();
@@ -714,19 +664,25 @@
                 })();
                 $(this).removeClass("btn-success").addClass("btn-dark");
                 $(this).html("Proceed to Checkout");
-                // when the directions button is pressed, it triggers ajax communications.
+                // the following line indicates the Directions button has been pressed
                 flag_ajax = 1;
             });
+
+            // 'Add to Cart' button. add items into the shopping cart
             $(".add-to-cart").click(function () {
                 var name = $(this).attr("id");
                 console.log(name);
-                var checkIfExist = jQuery.inArray(name, shoppingCartList);
-                if (checkIfExist == -1) { //item is not in the array
+                //check if item already exists in the shopping cart
+                var checkIfExist = jQuery.inArray(name, shoppingCartList); 
+
+                if (checkIfExist == -1) {
+                    //item is not in the array
+                    // add a new item to shopping cart
                     shoppingCartList.push(name);
-                    console.log("shoppingCartList: {" + shoppingCartList + "}");
                     $(this).removeAttr("id");
                     var str = '<li class="list-group-item" id="' + name + '">' + name + '<span onclick="deleteItem(\'' + name + '\');" class="delete float-right btn btn-m btn-danger">Delete</span></li>';
                     console.log(str);
+                    
                     $("#shopping_cart_list").append(str);
                 }
             });
