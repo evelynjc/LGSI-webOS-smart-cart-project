@@ -3,9 +3,9 @@
     <script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
     <script type="text/javascript">
         function init() {
-            //putKind. db8 생성
-            var test = document.getElementById("mydiv");
             
+            var test = document.getElementById("mydiv");
+            //delete already kind for generating new kind
             var request = webOS.service.request("luna://com.webos.service.db", {
                 method: "delKind",
                 parameters: {
@@ -19,6 +19,8 @@
                     test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
                 }
             });
+            
+            //generate kind
             request = webOS.service.request("luna://com.webos.service.db", {
                 method: "putKind",
                 parameters: {
@@ -38,7 +40,7 @@
                     test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
                 }
             });
-            //db에 값 insert
+            //put data in kind
             request = webOS.service.request("luna://com.webos.service.db", {
                 method: "put",
                 parameters: {
@@ -81,7 +83,7 @@
                 }
             });
             /*
-            //물품 이름에 의한 검색
+            //query by item name
             request = webOS.service.request("luna://com.webos.service.db", {
                 method: "find",
                 parameters: {
@@ -105,7 +107,7 @@
                     test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
                 }
             });
-            //바코드에 의한 검색
+            //query by item varcode
             request = webOS.service.request("luna://com.webos.service.db", {
                 method: "find",
                 parameters: {
