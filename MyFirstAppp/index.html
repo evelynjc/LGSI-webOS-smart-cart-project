@@ -217,9 +217,8 @@
         var visit;
         var distance;
         var data_num = 0;
-        //var data = [[2, 4], [4, 5], [0, 10], [10, 10]];
-        var dir = [[-1, 0], [0, 1], [1, 0], [0, -1]]; // U, R, D, L
-        var pos = ["D", "L", "U", "R"]; //��𿡼� �Դ���. �翬�� ���� �ݴ밡 �Ǿ����
+        var dir = [[-1, 0], [0, 1], [1, 0], [0, -1]]; //Up, Right, Left, Down
+        var pos = ["D", "L", "U", "R"]; //where I come
         var optimal_path = new Array();
         var optimal_path_cnt = 0;
         var PQ = new Array();
@@ -272,7 +271,11 @@
                     map[i][j] = 2;
                 }
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> e1b8c32dd34b24e361e28f3d4698ef48df26f141
             //Block 5
             for (var i = 72; i < 85; i++) {
                 for (var j = 10; j <= 75; j++) {
