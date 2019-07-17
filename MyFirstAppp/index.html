@@ -170,9 +170,8 @@
         var visit;
         var distance;
         var data_num = 0;
-        //var data = [[2, 4], [4, 5], [0, 10], [10, 10]];
-        var dir = [[-1, 0], [0, 1], [1, 0], [0, -1]]; // U, R, D, L
-        var pos = ["D", "L", "U", "R"]; //��𿡼� �Դ���. �翬�� ���� �ݴ밡 �Ǿ����
+        var dir = [[-1, 0], [0, 1], [1, 0], [0, -1]]; //Up, Right, Left, Down
+        var pos = ["D", "L", "U", "R"]; //where I come
         var optimal_path = new Array();
         var optimal_path_cnt = 0;
         var PQ = new Array();
@@ -202,26 +201,33 @@
                 }
             }
             //Block 1
-            for (var i = 15; i <= 30; i++) {
-                for (var j = 10; j <= 30; j++) {
+            for (var i = 0; i < 12; i++) {
+                for (var j = 10; j <= 75; j++) {
                     map[i][j] = 2;
                 }
             }
             //Block 2
-            for (var i = 15; i <= 30; i++) {
-                for (var j = 60; j <= 80; j++) {
+            for (var i = 24; i < 36; i++) {
+                for (var j = 10; j <= 75; j++) {
                     map[i][j] = 2;
                 }
             }
             //Block 3
-            for (var i = 60; i <= 80; i++) {
-                for (var j = 10; j <= 30; j++) {
+            for (var i = 36; i < 48; i++) {
+                for (var j = 10; j <= 20; j++) {
                     map[i][j] = 2;
                 }
             }
             //Block 4
-            for (var i = 15; i <= 30; i++) {
-                for (var j = 10; j <= 30; j++) {
+            for (var i = 48; i < 60; i++) {
+                for (var j = 10; j <= 75; j++) {
+                    map[i][j] = 2;
+                }
+            }
+            
+            //Block 5
+            for (var i = 72; i < 85; i++) {
+                for (var j = 10; j <= 75; j++) {
                     map[i][j] = 2;
                 }
             }
