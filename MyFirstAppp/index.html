@@ -1,12 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="bootstrap-4.3.1-dist/css/bootstrap.min.css">
-    <style type="text/css">html,
-        body {
+    <style type="text/css">
+        html, body {
             width: 100%;
             height: 100%;
             margin: 0;
@@ -238,6 +238,8 @@
                 // checkArray.checked = false;
                 // }
             }
+            
+            //get itme position by db and change map[x][y] = 1
             for (var i = 0; i < checkArray.length; i++) {
                 var lunaReq = webOS.service.request("luna://com.webos.service.db", {
                     method: "find",
@@ -268,6 +270,8 @@
                 });
             }
         }
+        
+        //path initialize
         function pathinit() {
             for (var i = 0; i < mapsize; i++) {
                 for (var j = 0; j < mapsize; j++) {
@@ -282,7 +286,7 @@
             optimal_path = new Array();
             optimal_path_cnt = 0;
         }
-        //minHeap ���� ����
+        //minHeap for BFS.
         function insert(x, y, d) {
             var arr = new Array();
             arr[0] = x;
@@ -313,7 +317,7 @@
             PQ[parent] = temp;
             return item;
         }
-        //���� �ϳ� ã���븶�� distance�� visit�� �ʱ�ȭ �������. ��? �������� �ٽ� �����ϴϱ�
+        //initialize visit and distance array
         function init() {
             for (var i = 0; i < mapsize; i++) {
                 for (var j = 0; j < mapsize; j++) {
@@ -322,7 +326,7 @@
                 }
             }
         }
-        //���� ���� �ʿ� �׸�������. ������� 1,2,3,4 ǥ��
+        //read visit and make optimal path
         function path(posx, posy) {
             var tx = posx;
             var ty = posy;
@@ -350,7 +354,7 @@
                 optimal_path[optimal_path_cnt++] = stack[stackTop--];
             path_num += 1;
         }
-        //data_num : ã�ƾ� �ϴ� ���� ����.
+        //find optimal path using BFS and minHeap
         function findpath() {
             for (var i = 0; i < data_num; i++) {
                 init();
@@ -365,22 +369,24 @@
                     for (var j = 0; j < 4; j++) {
                         tempx = prevx + dir[j][0];
                         tempy = prevy + dir[j][1];
-                        if (tempx < 0 || tempy < 0 || tempx >= mapsize || tempy >= mapsize || map[tempx][tempy] == 2) // �����±�
+                        if (tempx < 0 || tempy < 0 || tempx >= mapsize || tempy >= mapsize || map[tempx][tempy] == 2) //don't go
                             continue;
-                        if (map[tempx][tempy] == 1) { // ���ʷ� ������ ������.
+                        if (map[tempx][tempy] == 1) { 
+                            //find item. first find is optimal because using minHeap
                             visit[tempx][tempy] = pos[j];
                             distance[tempx][tempy] = tempdis + 1;
                             flag = 1;
-                            break;//ť��� ���� ���� ������ �ٷ� ������ ã���� break�� Ż�Ⱑ���ϴ�.
+                            break;
                         }
-                        if (map[tempx][tempy] == 0 && tempdis + 1 < distance[tempx][tempy]) { // �� �� �ִ±��� ��� �ű�� ����.
+                        if (map[tempx][tempy] == 0 && tempdis + 1 < distance[tempx][tempy]) {
+                            //if do not visit or distance is smaller than distance[x][y], change current distance. 
                             insert(tempx, tempy, tempdis + 1);
                             distance[tempx][tempy] = tempdis + 1;
                             visit[tempx][tempy] = pos[j];
                         }
                     }
                     if (flag == 1) {
-                        //������ ã�� break�� Ż���ϸ� �ٷ� ����� �ͼ� ��ó������.
+                        //find item
                         flag = 0;
                         path(tempx, tempy);
                         startx = tempx;
