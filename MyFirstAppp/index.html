@@ -92,7 +92,6 @@
     <!-- and Google Charts -->
     <script type="text/javascript" src="google-charts-loader.js"></script>
     <script>
-
         productList = [
             {
                 snack: []
@@ -178,7 +177,6 @@
                 console.log("Initial DB data retreival failed!: " + args.errorText);
             }
         });
-
         // for (var i = 0; i < productList[0]["snack"].length; i++) {
         //     console.log("1");
         //     var str = '\
@@ -229,7 +227,6 @@
         var checkArray;
         PQ[0] = new Array();
         PQ[0] = [0, 0, 0];
-
         function onLoad() {
             map = new Array();
             print_map = new Array();
@@ -261,7 +258,7 @@
             }
             //Block 3
             for (var i = 36; i < 48; i++) {
-                for (var j = 10; j <= 20; j++) {
+                for (var j = 55; j <= 75; j++) {
                     map[i][j] = 2;
                 }
             }
@@ -271,11 +268,6 @@
                     map[i][j] = 2;
                 }
             }
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> e1b8c32dd34b24e361e28f3d4698ef48df26f141
             //Block 5
             for (var i = 72; i < 85; i++) {
                 for (var j = 10; j <= 75; j++) {
@@ -283,7 +275,6 @@
                 }
             }
         }
-
         function onClick() {
             checkArray = new Array();
             var cnt = 0;
@@ -296,7 +287,6 @@
                 // checkArray.checked = false;
                 // }
             }
-
             for (var i = 0; i < checkArray.length; i++) {
                 var lunaReq = webOS.service.request("luna://com.webos.service.db", {
                     method: "find",
@@ -326,9 +316,7 @@
                     }
                 });
             }
-
         }
-
         function pathinit() {
             for (var i = 0; i < mapsize; i++) {
                 for (var j = 0; j < mapsize; j++) {
@@ -355,31 +343,25 @@
                 PQ[index] = PQ[parseInt(index / 2)];
                 index /= 2;
             }
-
             PQ[index] = arr;
         }
-
         function pop() {
             var item = PQ[1];
             var temp = PQ[PQsize];
             PQsize -= 1;
             var parent = 1, child = 2;
-
             while (child <= PQsize) {
                 if ((child < PQsize) && PQ[child][2] >= PQ[child + 1][2])
                     child += 1;
                 if (temp[2] < PQ[child][2])
                     break;
-
                 PQ[parent] = PQ[child];
                 parent = child;
                 child *= 2;
             }
-
             PQ[parent] = temp;
             return item;
         }
-
         //���� �ϳ� ã���븶�� distance�� visit�� �ʱ�ȭ �������. ��? �������� �ٽ� �����ϴϱ�
         function init() {
             for (var i = 0; i < mapsize; i++) {
@@ -389,7 +371,6 @@
                 }
             }
         }
-
         //���� ���� �ʿ� �׸�������. ������� 1,2,3,4 ǥ��
         function path(posx, posy) {
             var tx = posx;
@@ -403,7 +384,6 @@
                 tempstack[0] = tx;
                 tempstack[1] = ty;
                 stack[++stackTop] = tempstack;
-
                 if (visit[tx][ty] == 'D')
                     tx += 1;
                 else if (visit[tx][ty] == 'U')
@@ -412,16 +392,13 @@
                     ty -= 1;
                 else if (visit[tx][ty] == 'R')
                     ty += 1;
-
                 if (print_map[tx][ty] == 0)
                     print_map[tx][ty] = path_num;
             }
             while (stackTop != -1)
                 optimal_path[optimal_path_cnt++] = stack[stackTop--];
-
             path_num += 1;
         }
-
         //data_num : ã�ƾ� �ϴ� ���� ����.
         function findpath() {
             for (var i = 0; i < data_num; i++) {
@@ -463,11 +440,9 @@
                         while (PQsize != 0) {
                             pop();
                         }
-
                         break;
                     }
                 }
-
             }
             console.log(optimal_path);
             for (var i = 0; i < optimal_path.length; i++) {
@@ -475,10 +450,9 @@
                     x: parseInt(optimal_path[i][0]),
                     y: parseInt(optimal_path[i][1]),
                 });
-                console.log(optimalPath[i].x);
-                console.log(optimalPath[i].y);
+                // console.log(optimalPath[i].x);
+                // console.log(optimalPath[i].y);
             }
-
         }
     </script>
 </head>
@@ -522,27 +496,27 @@
                     <button id="main_btn" type="button" class="btn btn-success">Directions</button>
                 </div> <!-- close main button row -->
                 <!-- modal test -->
-                <button type="button" id="darktemplar" style="width: 1px; height: 1px;"class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="display:block;">Dark</button>
+                <button type="button" id="darktemplar" style="width: 1px; height: 1px;" class="btn btn-info btn-lg"
+                    data-toggle="modal" data-target="#myModal" style="display: none;">Dark</button>
 
-               <div class="modal fade" id="myModal" role="dialog">
-                   ddd
-                   <div class="modal-dialog">
-                       <!-- Modal content-->
-                       <div class="modal-content">
-                           <div class="modal-header">
-                           <button type="button" class="close" data-dismiss="modal">&times;</button>
-                           <h4 class="modal-title" id="mod_header">Modal Header</h4>
-                           </div>
-                           <div class="modal-body">
-                           <p id="mod_text">Some text in the modal.</p>
-                           </div>
-                           <div class="modal-footer">
-                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-        <!-- modal test -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title" id="mod_header">Modal Header</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p id="mod_text">Some text in the modal.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- modal test -->
             </div>
             <!--close 2nd col-->
 
@@ -552,44 +526,43 @@
     <!--close container-->
 
     <script>
+        var flag_ajax = 0;
         shoppingCartList = [];
         // currentPos = { x: "0", y: "0", d: "0" }; // x: 0~85, y: 0~90
         currentPos = { x: "0", y: "0", d: "0", id: "0" }; // x: 0~85, y: 0~90
         //console.log(currentPos);
-        function detect_varcode(currentPos){
+        function detect_varcode(currentPos) {
             if (currentPos.id != 0) {
-            var lunaReq = webOS.service.request("luna://com.webos.service.db", {
-                method: "find",
-                parameters: {
-                    "query": {
-                        "from": "com.sample.app:1",
-                        "where": [{
-                            "prop": "varcode",
-                            "op": "=",
-                            "val": currentPos.id.toString()
+                var lunaReq = webOS.service.request("luna://com.webos.service.db", {
+                    method: "find",
+                    parameters: {
+                        "query": {
+                            "from": "com.sample.app:1",
+                            "where": [{
+                                "prop": "varcode",
+                                "op": "=",
+                                "val": currentPos.id.toString()
+                            }
+                            ]
                         }
-                        ]
+                    },
+                    onSuccess: function (args) {
+                        console.log(typeof (args.results[0].name));
+                        var mod_head = document.getElementById("mod_header");
+                        var mod_text = document.getElementById("mod_text");
+                        mod_head.innerHTML = args.results[0].name;
+                        mod_text.innerHTML = args.results[0].price;
+                        document.getElementById("darktemplar").click();
+                    },
+                    onFailure: function (args) {
+                        var str = "errorCode: " + args.errorCode + "     " + args.errorText;
+                        console.log(str);
                     }
-                },
-                onSuccess: function (args) {
-                    console.log(typeof(args.results[0].name));
-                    var mod_head = document.getElementById("mod_header");
-                    var mod_text = document.getElementById("mod_text");
-                    mod_head.innerHTML = args.results[0].name;
-                    mod_text.innerHTML = args.results[0].price;
-                    document.getElementById("darktemplar").click();
-                },
-                onFailure: function (args) {
-                    var str = "errorCode: " + args.errorCode + "     " + args.errorText;
-                    console.log(str);
-                }
-            });
+                });
+            }
         }
-        }
-        
 
         optimalPath = []; // { x: 50, y: 50 } format
-
         // Google charts
         function drawChart() {
             var optimalPathGraph = google.visualization.arrayToDataTable([
@@ -598,7 +571,7 @@
                 // [45, 50],
                 // [35,56]
             ]);
-    
+
             var len = optimalPath.length;
             var xVal, yVal;
             for (var i = 0; i < len; i++) {
@@ -609,8 +582,6 @@
                     [xVal, yVal]
                 ]);
             }
-
-
             // data.addColumn, data.addRows
             var options = {
                 chartArea: { left: 0, bottom: 0, width: '100%', height: '100%' },
@@ -650,63 +621,59 @@
             var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
             chart.draw(optimalPathGraph, options);
         }
-
         // Ajax -----------------------------
 
-        // function try_ajax(){
-            // window.setInterval("refreshDiv()", 1000);
-            // function refreshDiv() {
-            //     $.ajax({
-            //         url: "http://192.168.43.182:80",
-            //         type: "GET",
-            //         //contentType:"application/x-www-form-urlencoded; char-set: euc-kr",
-            //         cache: false,
-            //         crossDomain: true,
-            //         dataType: "json",
-            //         //jsonpCallback : "callbackData",
-            //         data: "",
-            //         success: function (data) {
-            //             $("#id1").html("success");
-            //             var data_parse = JSON.stringify(data);
-            //             // $("#id1").html(data_parse);
-            //             console.log("success func");
+        console.log('start for try_ajax');
+        window.setInterval("refreshDiv()", 1000);
+        function refreshDiv() {
+            if(flag_ajax == 1){
+                $.ajax({
+                    url: "http://192.168.43.182:80",
+                    type: "GET",
+                    //contentType:"application/x-www-form-urlencoded; char-set: euc-kr",
+                    cache: false,
+                    crossDomain: true,
+                    dataType: "json",
+                    //jsonpCallback : "callbackData",
+                    data: "",
+                    success: function (data) {
+                        $("#id1").html("success");
+                        var data_parse = JSON.stringify(data);
+                        // $("#id1").html(data_parse);
+                        console.log("success func");
+                        currentPos.x = Math.round(data[0].x);
+                        currentPos.y = Math.round(data[1].y);
+                        currentPos.d = Math.round(data[2].theta);
+                        currentPos.id = data[3].name;
+                        console.log("x,y,th,barcode: " + currentPos.x + ", " + currentPos.y + ", " + currentPos.d + ", " + currentPos.id);
+                        detect_varcode(currentPos);
 
-            //             currentPos.x = Math.round(data[0].x);
-            //             currentPos.y = Math.round(data[1].y);
-            //             currentPos.d = Math.round(data[2].theta);
-            //             currentPos.id = data[3].name;
-            //             console.log("x,y,th,barcode: "+currentPos.x + ", " + currentPos.y + ", " + currentPos.d + ", " + currentPos.id);
-            //             detect_varcode(currentPos);
-            
-            //             $("#direction_marker").css({
-            //                 left: currentPos.x + 'vh',
-            //                 bottom: currentPos.y + 'vh',
-            //                 transform: "rotate("+ currentPos.d +"deg)",
-            //             });
-            //         },
-            //         error: function (request, status, error) {
-            //             $("#id1").html("failed");
-            //             console.log('error func', error);
-            //         }
-            //     });
-            // }
-        //}
+                        $("#direction_marker").css({
+                            left: currentPos.x + 'vh',
+                            bottom: currentPos.y + 'vh',
+                            transform: "rotate(" + currentPos.d + "deg)",
+                        });
+                    },
+                    error: function (request, status, error) {
+                        $("#id1").html("failed");
+                        console.log('error func', error);
+                    }
+                });
+                console.log("finish ajax");
+            }
+            console.log('not existed');
+        }
+
         function deleteItem(name) {
             console.log("name: " + name);
             var toBeDeleted = jQuery.inArray(name, shoppingCartList);
-
             if (toBeDeleted >= 0) { // item is in shopping cart array
                 shoppingCartList.splice(toBeDeleted, 1);
                 $("#" + name).remove();
                 console.log("shoppingCartList: {" + shoppingCartList + "}");
             }
         }
-
-
-
         $(document).ready(function () {
-
-
             console.log("3")
             $("select").change(function (e) {
                 var categoryVal = $("select option:selected").html();
@@ -716,7 +683,6 @@
                     $(".ramyeon").hide();
                     $(".drink").hide();
                     $(".toy").hide();
-
                     if (categoryVal == "Snacks") {
                         categoryVal = "snack";
                     }
@@ -737,9 +703,7 @@
                     $(".drink").show();
                     $(".toy").show();
                 }
-
             });
-
             // 'directions' button
             $("#main_btn").click(function () {
                 onClick();
@@ -747,15 +711,12 @@
                 (function () {
                     google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
-
                 })();
-
                 $(this).removeClass("btn-success").addClass("btn-dark");
                 $(this).html("Proceed to Checkout");
                 // when the directions button is pressed, it triggers ajax communications.
-                try_ajax();
+                flag_ajax = 1;
             });
-
             $(".add-to-cart").click(function () {
                 var name = $(this).attr("id");
                 console.log(name);
@@ -767,13 +728,9 @@
                     var str = '<li class="list-group-item" id="' + name + '">' + name + '<span onclick="deleteItem(\'' + name + '\');" class="delete float-right btn btn-m btn-danger">Delete</span></li>';
                     console.log(str);
                     $("#shopping_cart_list").append(str);
-
                 }
             });
-
-
         });
-
     </script>
 </body>
 

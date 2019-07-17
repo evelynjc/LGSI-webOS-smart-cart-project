@@ -14,7 +14,6 @@
                 onSuccess: function (args) {
                     test.innerHTML += "<h1 style='color:white'>delKind success" + "</h1>";
                     //console.log(args);
-
                 },
                 onFailure: function (args) {
                     test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
@@ -34,13 +33,11 @@
                 onSuccess: function (args) {
                     test.innerHTML += "<h1 style='color:white'>putKind success" + "</h1>";
                     //console.log(args);
-
                 },
                 onFailure: function (args) {
                     test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
                 }
             });
-
             //db에 값 insert
             request = webOS.service.request("luna://com.webos.service.db", {
                 method: "put",
@@ -61,13 +58,11 @@
                 onSuccess: function (args) {
                     test.innerHTML += "<h1 style='color:white'>put success" + "</h1>";
                     //console.log(args);
-
                 },
                 onFailure: function (args) {
                     test.innerHTML += "<h1 style='color:white'> errorCode: " + args.errorCode + "<br>errorText : " + args.errorText + "<br></h1>";
                 }
             });
-
             request = webOS.service.request("luna://com.webos.service.db", {
                 method: "find",
                 parameters: {
