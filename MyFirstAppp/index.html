@@ -29,7 +29,7 @@
         .map {
             background-color: #e6e6e6;
             height: 100vh;
-            background-image: url("map.png");
+            background-image: url("storemap.png");
             background-size: 100%;
         }
 
@@ -93,77 +93,124 @@
     <script type="text/javascript" src="google-charts-loader.js"></script>
     <script>
 
-        // productList = [
-        //     {
-        //         snack: []
-        //     },
-        //     {
-        //         ramyeon: []
-        //     },
-        //     {
-        //         drink: []
-        //     },
-        //     {
-        //         toy: []
-        //     }
-        // ];
         productList = [
             {
-                snack: ["yangparing", "saewooggang", "chocopie"]
+                snack: []
             },
             {
-                ramyeon: ["shinramyeon", "anseong", "jinramyeon"]
+                ramyeon: []
             },
             {
-                drink: ["coke", "cider"]
+                drink: []
             },
             {
-                toy: ["pororo", "gundam"]
+                toy: []
             }
         ];
+        // productList = [
+        //     {
+        //         snack: ["yangparing", "saewooggang", "chocopie"]
+        //     },
+        //     {
+        //         ramyeon: ["shinramyeon", "anseong", "jinramyeon"]
+        //     },
+        //     {
+        //         drink: ["coke", "cider"]
+        //     },
+        //     {
+        //         toy: ["pororo", "gundam"]
+        //     }
+        // ];
         cartItemsPos = [];
         // get all of the DB data
-        // var dbReq = webos.service.request("luna://com.webos.service.db", {
-        //     method: "find",
-        //     parameters: {
-        //         "query": {
-        //             "from": "com.sample.app:1",
-        //             "where": [{
-        //                 "prop": "_kind",
-        //                 "op": "=",
-        //                 "val": "com.sample.app:1"
-        //             }]
-        //         }
-        //     },
-        //     onSuccess: function (args) {
-        //         for (var i = 0; i < args.results.length; i++) {
-        //             var cat = args.results[i].category;
-        //             var name = args.results[i].name;
-        //             if (cat == "snack") {
-        //                 productList["snack"].push(name);
-        //             }
-        //             else if (cat == "ramyeon") {
-        //                 productList["ramyeon"].push(name);
-        //             }
-        //             else if (cat == "drink") {
-        //                 productList["drink"].push(name);
-        //             }
-        //             else if (cat == "toy") {
-        //                 productList["toy"].push(name);
-        //             }
-        //             else {
-        //                 console.log("Error! Product category not identified: " + args.results[i]);
-        //             }
-        //         }
+        var dbReq = webOS.service.request("luna://com.webos.service.db", {
+            method: "find",
+            parameters: {
+                "query": {
+                    "from": "com.sample.app:1",
+                }
+            },
+            onSuccess: function (args) {
+                console.log("Retreival Success");
+                for (var i = 0; i < args.results.length; i++) {
+                    var cat = args.results[i].category;
+                    var name = args.results[i].name;
+                    if (cat == "snack") {
+                        productList[0]["snack"].push(name);
+                        var str = '\
+                        <li class="list-group-item snack" >' + args.results[i].name + '\
+                        <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ args.results[i].name + '">Add to Cart</span>\
+                        </li>';
+                        $("#item_list").append(str);
+                    }
+                    else if (cat == "ramyeon") {
+                        productList[1]["ramyeon"].push(name);
+                        var str = '\
+                        <li class="list-group-item ramyeon" >' + args.results[i].name + '\
+                        <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ args.results[i].name + '">Add to Cart</span>\
+                        </li>';
+                        $("#item_list").append(str);
+                    }
+                    else if (cat == "drink") {
+                        productList[2]["drink"].push(name);
+                        var str = '\
+                        <li class="list-group-item drink" >' + args.results[i].name + '\
+                        <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ args.results[i].name + '">Add to Cart</span>\
+                        </li>';
+                        $("#item_list").append(str);
+                    }
+                    else if (cat == "toy") {
+                        productList[3]["toy"].push(name);
+                        var str = '\
+                        <li class="list-group-item toy" >' + args.results[i].name + '\
+                        <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ args.results[i].name + '">Add to Cart</span>\
+                        </li>';
+                        $("#item_list").append(str);
+                    }
+                    else {
+                        console.log("Error! Product category not identified: " + args.results[i]);
+                    }
+                }
+                // console.log()
+                console.log(1)
+            },
+            onFailure: function (args) {
+                console.log("Initial DB data retreival failed!: " + args.errorText);
+            }
+        });
 
-        //     },
-        //     onFailure: function (args) {
-        //         console.log("Initial DB data retreival failed!: " + args.errorText);
-        //     }
-        // });
-
-
-
+        // for (var i = 0; i < productList[0]["snack"].length; i++) {
+        //     console.log("1");
+        //     var str = '\
+        //         <li class="list-group-item snack" >' + productList[0]["snack"][i] + '\
+        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[0]["snack"][i] + '">Add to Cart</span>\
+        //         </li>';
+        //     $("#item_list").append(str);
+        //     console.log("2");
+        // }
+        // for (var i = 0; i < productList[1]["ramyeon"].length; i++) {
+        //     var str = '\
+        //         <li class="list-group-item ramyeon" >' + productList[1]["ramyeon"][i] + '\
+        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[1]["ramyeon"][i] + '">Add to Cart</span>\
+        //         </li>';
+        //     $("#item_list").append(str);
+        // }
+        // for (var i = 0; i < productList[2]["drink"].length; i++) {
+        //     var str = '\
+        //         <li class="list-group-item drink" >' + productList[2]["drink"][i] + '\
+        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[2]["drink"][i] + '">Add to Cart</span>\
+        //         </li>';
+        //     $("#item_list").append(str);
+        // }
+        // for (var i = 0; i < productList[3]["toy"].length; i++) {
+        //     var str = '\
+        //         <li class="list-group-item toy" >' + productList[3]["toy"][i] + '\
+        //         <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[3]["toy"][i] + '">Add to Cart</span>\
+        //         </li>';
+        //     $("#item_list").append(str);
+        // }
+        //alert();
+        console.log(3);
         var map;
         var print_map;
         var mapsize = 85;
@@ -224,7 +271,11 @@
                     map[i][j] = 2;
                 }
             }
+<<<<<<< HEAD
+
+=======
             
+>>>>>>> e1b8c32dd34b24e361e28f3d4698ef48df26f141
             //Block 5
             for (var i = 72; i < 85; i++) {
                 for (var j = 10; j <= 75; j++) {
@@ -246,35 +297,35 @@
                 // }
             }
 
-            // for (var i = 0; i < checkArray.length; i++) {
-            //     var lunaReq = webOS.service.request("luna://com.webos.service.db", {
-            //         method: "find",
-            //         parameters: {
-            //             "query": {
-            //                 "from": "com.sample.app:1",
-            //                 "where": [{
-            //                     "prop": "name",
-            //                     "op": "=",
-            //                     "val": checkArray[i]
-            //                 }
-            //                 ]
-            //             }
-            //         },
-            //         onSuccess: function (args) {
-            //             console.log(args.results[0].name);
-            //             map[args.results[0].x][args.results[0].y] = 1;
-            //             data_num++;
-            //             if (data_num == checkArray.length) {
-            //                 findpath();
-            //                 pathinit();
-            //             }
-            //         },
-            //         onFailure: function (args) {
-            //             var str = "errorCode: " + args.errorCode + "     " + args.errorText;
-            //             console.log(str);
-            //         }
-            //     });
-            // }
+            for (var i = 0; i < checkArray.length; i++) {
+                var lunaReq = webOS.service.request("luna://com.webos.service.db", {
+                    method: "find",
+                    parameters: {
+                        "query": {
+                            "from": "com.sample.app:1",
+                            "where": [{
+                                "prop": "name",
+                                "op": "=",
+                                "val": checkArray[i]
+                            }
+                            ]
+                        }
+                    },
+                    onSuccess: function (args) {
+                        console.log(args.results[0].name);
+                        map[args.results[0].x][args.results[0].y] = 1;
+                        data_num++;
+                        if (data_num == checkArray.length) {
+                            findpath();
+                            pathinit();
+                        }
+                    },
+                    onFailure: function (args) {
+                        var str = "errorCode: " + args.errorCode + "     " + args.errorText;
+                        console.log(str);
+                    }
+                });
+            }
 
         }
 
@@ -429,7 +480,6 @@
             }
 
         }
-
     </script>
 </head>
 
@@ -440,6 +490,7 @@
                 <!-- chart test -->
                 <div id="curve_chart" style="height: inherit; width: inherit; "></div>
                 <div id="direction_marker"><img src="arrow(bluesky).png"></div>
+
             </div>
             <!-- <p id="id1">testttt</p> -->
             <div class="col">
@@ -470,7 +521,28 @@
                 <div class="row" id="main_btn_wrapper">
                     <button id="main_btn" type="button" class="btn btn-success">Directions</button>
                 </div> <!-- close main button row -->
+                <!-- modal test -->
+                <button type="button" id="darktemplar" style="width: 1px; height: 1px;"class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="display:block;">Dark</button>
 
+               <div class="modal fade" id="myModal" role="dialog">
+                   ddd
+                   <div class="modal-dialog">
+                       <!-- Modal content-->
+                       <div class="modal-content">
+                           <div class="modal-header">
+                           <button type="button" class="close" data-dismiss="modal">&times;</button>
+                           <h4 class="modal-title" id="mod_header">Modal Header</h4>
+                           </div>
+                           <div class="modal-body">
+                           <p id="mod_text">Some text in the modal.</p>
+                           </div>
+                           <div class="modal-footer">
+                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+        <!-- modal test -->
             </div>
             <!--close 2nd col-->
 
@@ -481,7 +553,41 @@
 
     <script>
         shoppingCartList = [];
-        currentPos = { x: "0", y: "0", d: "0" }; // x: 0~85, y: 0~90
+        // currentPos = { x: "0", y: "0", d: "0" }; // x: 0~85, y: 0~90
+        currentPos = { x: "0", y: "0", d: "0", id: "0" }; // x: 0~85, y: 0~90
+        //console.log(currentPos);
+        function detect_varcode(currentPos){
+            if (currentPos.id != 0) {
+            var lunaReq = webOS.service.request("luna://com.webos.service.db", {
+                method: "find",
+                parameters: {
+                    "query": {
+                        "from": "com.sample.app:1",
+                        "where": [{
+                            "prop": "varcode",
+                            "op": "=",
+                            "val": currentPos.id.toString()
+                        }
+                        ]
+                    }
+                },
+                onSuccess: function (args) {
+                    console.log(typeof(args.results[0].name));
+                    var mod_head = document.getElementById("mod_header");
+                    var mod_text = document.getElementById("mod_text");
+                    mod_head.innerHTML = args.results[0].name;
+                    mod_text.innerHTML = args.results[0].price;
+                    document.getElementById("darktemplar").click();
+                },
+                onFailure: function (args) {
+                    var str = "errorCode: " + args.errorCode + "     " + args.errorText;
+                    console.log(str);
+                }
+            });
+        }
+        }
+        
+
         optimalPath = []; // { x: 50, y: 50 } format
 
         // Google charts
@@ -489,23 +595,22 @@
             var optimalPathGraph = google.visualization.arrayToDataTable([
                 ['X', 'Y'],
                 [0, 0],
-                [45, 50],
-                [35,56]
+                // [45, 50],
+                // [35,56]
             ]);
-            var selectedItemsStyle = "point { size: 18; shape-type: star; fill-color: #a52714; }'";
-
+    
             var len = optimalPath.length;
             var xVal, yVal;
-            // for (var i = 0; i < len; i++) {
-            //     xVal = optimalPath[i].x;
-            //     yVal = optimalPath[i].y;
-            //     console.log(xVal + ", " + yVal);
-            //     optimalPathGraph.addRows([
-            //         [xVal, yVal, selectedItemsStyle]
-            //     ]);
-            // }
+            for (var i = 0; i < len; i++) {
+                xVal = optimalPath[i].x;
+                yVal = optimalPath[i].y;
+                console.log(xVal + ", " + yVal);
+                optimalPathGraph.addRows([
+                    [xVal, yVal]
+                ]);
+            }
 
-            
+
             // data.addColumn, data.addRows
             var options = {
                 chartArea: { left: 0, bottom: 0, width: '100%', height: '100%' },
@@ -548,40 +653,44 @@
 
         // Ajax -----------------------------
 
-        // window.setInterval("refreshDiv()", 1000);
-        // function refreshDiv() {
-        //     $.ajax({
-        //         url: "http://35.154.121.156:80",
-        //         type: "GET",
-        //         //contentType:"application/x-www-form-urlencoded; char-set: euc-kr",
-        //         cache: false,
-        //         crossDomain: true,
-        //         dataType: "json",
-        //         //jsonpCallback : "callbackData",
-        //         data: "",
-        //         success: function (data) {
-        //             $("#id1").html("success");
-        //             var data_parse = JSON.stringify(data);
-        //             // $("#id1").html(data_parse);
-        //             console.log("success func");
+        // function try_ajax(){
+            // window.setInterval("refreshDiv()", 1000);
+            // function refreshDiv() {
+            //     $.ajax({
+            //         url: "http://192.168.43.182:80",
+            //         type: "GET",
+            //         //contentType:"application/x-www-form-urlencoded; char-set: euc-kr",
+            //         cache: false,
+            //         crossDomain: true,
+            //         dataType: "json",
+            //         //jsonpCallback : "callbackData",
+            //         data: "",
+            //         success: function (data) {
+            //             $("#id1").html("success");
+            //             var data_parse = JSON.stringify(data);
+            //             // $("#id1").html(data_parse);
+            //             console.log("success func");
 
-        //             currentPos.x = Math.round(data[0].x);
-        //             currentPos.y = Math.round(data[1].y);
-        //             currentPos.d = Math.round(data[2].theta);
-        //             console.log(currentPos.x + "" + currentPos.y + "" + console.log(currentPos.d );
-        //
-        //             $("#direction_marker").css({
-        //                 left: currentPos.x + 'vh',
-        //                 bottom: currentPos.y + 'vh',
-        //                 transform: "rotate("+ currentPos.d +"deg)",
-        //             });
-        //         },
-        //         error: function (request, status, error) {
-        //             $("#id1").html("failed");
-        //             console.log('error func', error);
-        //         }
-        //     });
-        // }
+            //             currentPos.x = Math.round(data[0].x);
+            //             currentPos.y = Math.round(data[1].y);
+            //             currentPos.d = Math.round(data[2].theta);
+            //             currentPos.id = data[3].name;
+            //             console.log("x,y,th,barcode: "+currentPos.x + ", " + currentPos.y + ", " + currentPos.d + ", " + currentPos.id);
+            //             detect_varcode(currentPos);
+            
+            //             $("#direction_marker").css({
+            //                 left: currentPos.x + 'vh',
+            //                 bottom: currentPos.y + 'vh',
+            //                 transform: "rotate("+ currentPos.d +"deg)",
+            //             });
+            //         },
+            //         error: function (request, status, error) {
+            //             $("#id1").html("failed");
+            //             console.log('error func', error);
+            //         }
+            //     });
+            // }
+        //}
         function deleteItem(name) {
             console.log("name: " + name);
             var toBeDeleted = jQuery.inArray(name, shoppingCartList);
@@ -589,7 +698,7 @@
             if (toBeDeleted >= 0) { // item is in shopping cart array
                 shoppingCartList.splice(toBeDeleted, 1);
                 $("#" + name).remove();
-                // console.log("shoppingCartList: {" + shoppingCartList + "}");
+                console.log("shoppingCartList: {" + shoppingCartList + "}");
             }
         }
 
@@ -597,35 +706,8 @@
 
         $(document).ready(function () {
 
-            for (var i = 0; i < productList[0]["snack"].length; i++) {
-                var str = '\
-                    <li class="list-group-item snack" >' + productList[0]["snack"][i] + '\
-                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[0]["snack"][i] + '">Add to Cart</span>\
-                    </li>';
-                $("#item_list").append(str);
-            }
-            for (var i = 0; i < productList[1]["ramyeon"].length; i++) {
-                var str = '\
-                    <li class="list-group-item ramyeon" >' + productList[1]["ramyeon"][i] + '\
-                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[1]["ramyeon"][i] + '">Add to Cart</span>\
-                    </li>';
-                $("#item_list").append(str);
-            }
-            for (var i = 0; i < productList[2]["drink"].length; i++) {
-                var str = '\
-                    <li class="list-group-item drink" >' + productList[2]["drink"][i] + '\
-                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[2]["drink"][i] + '">Add to Cart</span>\
-                    </li>';
-                $("#item_list").append(str);
-            }
-            for (var i = 0; i < productList[3]["toy"].length; i++) {
-                var str = '\
-                    <li class="list-group-item toy" >' + productList[3]["toy"][i] + '\
-                    <span class="add-to-cart float-right btn btn-m btn-dark" id="'+ productList[3]["toy"][i] + '">Add to Cart</span>\
-                    </li>';
-                $("#item_list").append(str);
-            }
 
+            console.log("3")
             $("select").change(function (e) {
                 var categoryVal = $("select option:selected").html();
                 if (categoryVal != "Categories") {
@@ -670,6 +752,8 @@
 
                 $(this).removeClass("btn-success").addClass("btn-dark");
                 $(this).html("Proceed to Checkout");
+                // when the directions button is pressed, it triggers ajax communications.
+                try_ajax();
             });
 
             $(".add-to-cart").click(function () {
